@@ -87,7 +87,7 @@ export default function Home() {
                 Training teaches a model what it knows. Inference is everything that happens afterward, every time somebody uses it, and it is where the bill actually lands. Serving a generative model well means working across a strange range of the stack: attention kernels at one end, GPU procurement across three clouds at the other.
               </p>
               <p>
-                This is an interactive companion to <em className="font-serif">Inference Engineering</em> by Philip Kiely. It follows the book's structure and covers the same ground, with the explanations rewritten and simulators built for the parts that are easier to understand by turning a dial than by reading a paragraph.
+                This is an interactive companion to <em className="font-serif">Inference Engineering</em> by Philip Kiely. It follows the book's structure, but replaces long prose with diagrams and simulations.
               </p>
             </div>
           </section>
