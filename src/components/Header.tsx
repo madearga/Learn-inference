@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function Logo() {
   return (
@@ -84,7 +85,8 @@ export function Header() {
           <Logo />
         </div>
         <div className="flex-1" />
-        <div className="flex shrink-0 justify-end">
+        <div className="flex shrink-0 justify-end items-center gap-2">
+          <ThemeToggle />
           <a
             href="https://www.baseten.co/inference-engineering/"
             target="_blank"

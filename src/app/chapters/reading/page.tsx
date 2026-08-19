@@ -1,9 +1,26 @@
 import { getReadingContent } from "@/lib/content";
+import { furtherReadingSections } from "@/data/chapters";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Further reading · Learn Inference",
+  description:
+    "Papers and resources worth your time for understanding inference engineering.",
+};
 
 export default function ReadingPage() {
   const data = getReadingContent();
   if (!data) notFound();
+
+  function slugForSection(title: string, idx: number): string {
+    const numMatch = title.match(/^(B\.\d+)/);
+    if (numMatch) {
+      const found = furtherReadingSections.find((s) => s.number === numMatch[1]);
+      if (found) return found.slug;
+    }
+    return `section-${idx}`;
+  }
 
   return (
     <div className="mx-auto max-w-[110rem] px-5 sm:px-6">
@@ -27,8 +44,10 @@ export default function ReadingPage() {
 
         {/* Sections */}
         <div className="mt-12 flex flex-col gap-10">
-          {data.sections.map((section, idx) => (
-            <div key={idx}>
+          {data.sections.map((section, idx) => {
+            const slug = slugForSection(section.title, idx);
+            return (
+            <div key={idx} id={slug} className="scroll-mt-20">
               <h2 className="font-serif mb-4 text-xl font-medium">
                 {section.title}
               </h2>
@@ -40,7 +59,8 @@ export default function ReadingPage() {
                 ))}
               </ul>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

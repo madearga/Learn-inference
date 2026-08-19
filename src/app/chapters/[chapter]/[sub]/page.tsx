@@ -1,6 +1,10 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { chapters, getAdjacentSubChapters, findSubChapter } from "@/data/chapters";
 import { ArrowRightIcon } from "@/components/Header";
+import { MobileTOC } from "@/components/MobileTOC";
+import { QuantizationSimulator } from "@/components/QuantizationSimulator";
+import { KeyboardNav } from "@/components/KeyboardNav";
 import { getContent } from "@/lib/content";
 import { notFound } from "next/navigation";
 
@@ -14,7 +18,25 @@ export function generateStaticParams() {
   return params;
 }
 
-function TableOfContents({ chapterSlug }: { chapterSlug: string }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ chapter: string; sub: string }>;
+}): Promise<Metadata> {
+  const { chapter: chapterSlug, sub: subSlug } = await params;
+  const found = findSubChapter(chapterSlug, subSlug);
+  if (!found) return {};
+
+  const content = getContent(chapterSlug, subSlug);
+  const title = content?.sectionTitle || found.sub.title;
+
+  return {
+    title: `${title} · ${found.chapter.title} · Learn Inference`,
+    description: content?.paragraphs[0]?.slice(0, 160) || undefined,
+  };
+}
+
+function TableOfContents({ chapterSlug, currentSubSlug }: { chapterSlug: string; currentSubSlug: string }) {
   const ch = chapters.find((c) => c.slug === chapterSlug);
   if (!ch) return null;
 
@@ -24,17 +46,24 @@ function TableOfContents({ chapterSlug }: { chapterSlug: string }) {
         Chapter {ch.number} · {ch.title}
       </div>
       <ul className="flex flex-col gap-1.5">
-        {ch.subchapters.map((sub) => (
-          <li key={sub.slug}>
-            <Link
-              href={`/chapters/${ch.slug}/${sub.slug}`}
-              className="hover:text-foreground block text-sm transition-colors"
-            >
-              <span className="tabular-nums">{sub.number}</span>{" "}
-              {sub.title}
-            </Link>
-          </li>
-        ))}
+        {ch.subchapters.map((sub) => {
+          const isActive = sub.slug === currentSubSlug;
+          return (
+            <li key={sub.slug}>
+              <Link
+                href={`/chapters/${ch.slug}/${sub.slug}`}
+                className={`block text-sm transition-colors ${
+                  isActive
+                    ? "text-foreground font-medium"
+                    : "hover:text-foreground"
+                }`}
+              >
+                <span className="tabular-nums">{sub.number}</span>{" "}
+                {sub.title}
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );
@@ -64,13 +93,22 @@ export default async function SubChapterPage({
   const { chapter, sub } = found;
   const { prev, next } = getAdjacentSubChapters(chapterSlug, subSlug);
 
+  const prevHref = prev ? `/chapters/${prev.chapterSlug}/${prev.sub.slug}` : undefined;
+  const nextHref = next ? `/chapters/${next.chapterSlug}/${next.sub.slug}` : undefined;
+
   return (
     <div className="mx-auto max-w-[110rem] px-5 sm:px-6">
+      <KeyboardNav prevHref={prevHref} nextHref={nextHref} />
       <div className="flex gap-12 py-8">
         {/* Left sidebar - Table of Contents */}
         <aside className="hidden md:sticky md:top-[5.5rem] md:block md:w-56 md:self-start md:shrink-0">
-          <TableOfContents chapterSlug={chapterSlug} />
+          <TableOfContents chapterSlug={chapterSlug} currentSubSlug={subSlug} />
         </aside>
+
+        {/* Mobile Table of Contents */}
+        <div className="mb-6">
+          <MobileTOC chapterSlug={chapterSlug} currentSubSlug={subSlug} />
+        </div>
 
         {/* Main content */}
         <div className="min-w-0 max-w-3xl">
@@ -107,6 +145,11 @@ export default async function SubChapterPage({
             ))}
           </div>
 
+          {/* Interactive simulator for quantization page */}
+          {chapterSlug === "techniques" && subSlug === "quantization" && (
+            <QuantizationSimulator />
+          )}
+
           {/* Sub-sections */}
           {content.subSections.map((ss, idx) => (
             <div key={idx} className="mt-10">
@@ -128,7 +171,7 @@ export default async function SubChapterPage({
           <nav className="border-hairline mt-16 flex border-t pt-6">
             {prev ? (
               <Link
-                href={`/chapters/${prev.chapterSlug}/${prev.sub.slug}`}
+                href={prevHref!}
                 className="hover:bg-surface flex flex-1 flex-col gap-1 rounded-lg p-3 transition-colors"
               >
                 <span className="text-muted-foreground text-xs">Previous</span>
@@ -139,7 +182,7 @@ export default async function SubChapterPage({
             )}
             {next ? (
               <Link
-                href={`/chapters/${next.chapterSlug}/${next.sub.slug}`}
+                href={nextHref!}
                 className="hover:bg-surface flex flex-1 flex-col items-end gap-1 rounded-lg p-3 text-right transition-colors"
               >
                 <span className="text-muted-foreground text-xs">Next</span>

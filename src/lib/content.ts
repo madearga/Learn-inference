@@ -192,8 +192,17 @@ function parseContent(raw: string): ChapterContent {
     if (line === "#") continue;
 
     // Callout headers (short lines before a longer explanation)
-    // This is a heuristic - short standalone lines that aren't paragraph-length
-    if (line.length < 40 && line.length > 2 && !line.endsWith(".") && j + 1 < lines.length && lines[j + 1].length > 60) {
+    // Heuristic: short standalone non-sentence heading followed by a paragraph
+    // Exclude known navigation/control words
+    const calloutExclude = /^(Previous|Next|Software|Contents|Glossary|Description|Hardware|Models|Inference|Production|Techniques|Modalities|Prerequisites)$/i;
+    if (
+      line.length < 50 &&
+      line.length > 3 &&
+      !line.endsWith(".") &&
+      !calloutExclude.test(line) &&
+      j + 1 < lines.length &&
+      lines[j + 1].length > 60
+    ) {
       if (currentCallout) content.callouts.push(currentCallout);
       currentCallout = { title: line, body: lines[j + 1].trim() };
       j++; // skip next line since we consumed it

@@ -173,7 +173,7 @@ export default function Home() {
                 {furtherReadingSections.map((sec) => (
                   <li key={sec.slug}>
                     <Link
-                      href={`/chapters/reading/${sec.slug}`}
+                      href={`/chapters/reading#${sec.slug}`}
                       className="hover:bg-surface flex items-center gap-3 px-3 py-2.5 text-sm transition-colors"
                     >
                       <span className="border-hairline text-muted-foreground flex size-[1.375rem] shrink-0 items-center justify-center rounded-md border">
