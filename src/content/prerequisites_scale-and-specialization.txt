@@ -1,0 +1,81 @@
+Learn Inference
+Chapter 1 · Prerequisites
+Scale and specialization
+Contents
+Chapter 1 · Prerequisites
+1 of 4
+1.1
+Scale and specialization
+
+There are two ways to get a model into your product.
+
+Shared inference: send traffic to a public endpoint and pay per million tokens.
+Dedicated deployment: rent GPUs, run the service yourself, and pay per hour whether or not anyone is using it.
+
+This is a related but separate axis from open versus closed weights. Plenty of open models are available on shared endpoints, and large customers can often get dedicated capacity for closed models. The connection is that open weights are what make unrestricted dedicated inference possible at all.
+
+Almost every product should start shared. Zero overhead, no cold starts, no capacity planning, and you only pay for what you use. What you give up is control: your uptime is capped by theirs, your latency is whatever they decide, and your cost scales linearly forever.
+
+That last point is the one that eventually forces the move. Linear cost is a bargain at low volume and a problem at high volume, and the crossover is further out than most people guess — because a dedicated GPU bills for the hours you are asleep too.
+
+1B
+2.67B
+4B
+5.67B
+7B
+8.33B
+10B
+11.67B
+13.33B
+15B
+16.67B
+18.33B
+20B
+$0
+$5k
+$9k
+$14k
+$18k
+Shared API
+Dedicated GPUs
+Monthly tokens served, in billions
+Crossover
+none
+at this utilization the API stays cheaper at every volume shown
+One GPU serves
+2.0B
+tokens per month at 35% utilization
+Cost floor
+$1,752
+per month, per GPU, used or not
+Shared API price
+
+$0.60 / M tokens
+
+GPU hourly rate
+
+$2.40 / hour
+
+Throughput per GPU
+
+2,200 tok/s
+
+Utilization
+
+35% of the month with work queued
+
+When per-token billing stops being the cheap option. Shared endpoints cost nothing at zero and scale linearly. Dedicated GPUs are a step function: flat until you saturate a card, then another card. Drop utilization to what your traffic really looks like overnight and the crossover moves a long way right.
+
+Utilization is the term everyone forgets. A GPU that is busy 20 percent of the day costs the same as one busy 100 percent of the day, so a napkin calculation using peak throughput will tell you to migrate months before you should. Three things actually justify the switch:
+
+Scale: your volume makes per-GPU cheaper than per-token, honestly accounting for idle time.
+Specialization: you are running a fine-tuned model, or you have latency or uptime requirements a shared endpoint will not meet.
+Orchestration: your product chains several models together and the network hops between them have become the latency.
+
+Moving makes you responsible for your own inference engineering. That is more control and more surface area, and it raises the floor on your monthly spend from zero to the cost of the smallest sensible fleet. Do it when there is a clear business reason, not because it feels more serious.
+
+Inference
+A map of what follows
+Next
+About your app
+$0

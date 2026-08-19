@@ -1,0 +1,34 @@
+Learn Inference
+Chapter 6 · Modalities
+Embedding model architecture
+Embedding model architecture
+Contents
+Chapter 6 · Modalities
+2 of 6
+6.2
+Embedding models
+
+Embedding models turn a variable-length input into a fixed-length vector. They power search, retrieval, clustering, and recommendation, and they are the quiet workhorse of production AI — far more embedding calls happen daily than chat completions.
+
+6.2.1
+Embedding model architecture
+#
+
+Usually an encoder-only transformer, often BERT-shaped and small: hundreds of millions of parameters rather than tens of billions. The output is pooled across positions into a single vector.
+
+Small and encoder-only changes everything about serving. There is no autoregressive loop, so no decode phase and no KV cache. One forward pass produces the entire output.
+
+6.2.2
+Embedding model inference
+#
+
+Which makes embeddings almost purely compute-bound and almost perfectly batchable. There is no memory-bandwidth wall to work around, because you are not re-reading the weights per token.
+
+The optimizations are correspondingly different: large batches, sequence-length bucketing so short inputs are not padded to the longest in the batch, and often a fractional GPU, since a 300M-parameter model cannot keep an H100 busy.
+
+A high-performance pipeline usually parallelizes tokenization on the CPU alongside GPU inference. For a model this small, CPU-side preprocessing is a genuine bottleneck rather than a rounding error.
+
+Previous
+Vision language models
+Next
+ASR models

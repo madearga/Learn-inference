@@ -1,0 +1,74 @@
+Learn Inference
+Chapter 4 · Software
+vLLM
+vLLM
+Contents
+Chapter 4 · Software
+3 of 5
+4.3
+Inference engines
+
+Three engines are genuinely competitive: vLLM, SGLang, and TensorRT-LLM. All three give good out-of-the-box performance for LLMs and the architectures that resemble them, and all three support the techniques in Chapter 5 — continuous batching, post-training quantization, speculative decoding, prefix caching, parallelism, disaggregation.
+
+Their value is configurability. Working with pre-optimized components means your time goes into testing combinations rather than reimplementing the same attention kernel badly.
+
+vLLM
+UC Berkeley, now the PyTorch Project
+Performance
+Ease of use
+
+The broadest support of the three, and by a wide margin the most popular. Nearly every open model works on day zero. Excellent when properly configured; usually short of what a narrower engine can extract.
+
+SGLang
+LMSYS Org
+Performance
+Ease of use
+
+Comparable to vLLM in performance and ease, with particular strength in structured output and complex prompting patterns. Runs on NVIDIA and AMD.
+
+TensorRT-LLM
+NVIDIA
+Performance
+Ease of use
+
+The best performance available if you are on NVIDIA and willing to pay for it in configuration. Compilation-based, steeper learning curve, narrower model support, and no image or video generation.
+
+No constraints, so all three are live. Reach for vLLM or SGLang to get running, and move to TensorRT-LLM when the last twenty percent of performance is worth the configuration effort.
+
+Must run on AMD
+Must run on TPUs
+Image or video generation
+Day-zero support for new models
+Choosing an inference engine by what you actually need. All three support the same core techniques. Turn on the constraints that apply to you and watch the field narrow — the choice is usually made by requirements rather than benchmarks.
+4.3.1
+vLLM
+#
+
+vLLM has the largest share by a distance — more GitHub stars than the other two combined. Released in mid-2023 out of UC Berkeley, it now lives under the PyTorch Project at the Linux Foundation.
+
+Breadth is the selling point: NVIDIA, AMD, and Intel GPUs plus Google TPUs, and day-zero support for essentially every open model. vLLM Omni extends it to image, audio, and video.
+
+The tradeoff follows the principle from Chapter 1: constraints buy performance. A platform that must serve every model on every accelerator gives up some of the ceiling a narrower engine can reach. Configured well it is genuinely fast; it is usually not the fastest.
+
+4.3.2
+SGLang
+#
+
+SGLang, from LMSYS, is close to vLLM on both performance and ease. Its distinguishing work is in structured generation and prompt programming — the machinery around constrained decoding and complex multi-call patterns is unusually good. RadixAttention, its approach to prefix cache sharing, is a genuine contribution.
+
+4.3.3
+TensorRT-LLM
+#
+
+NVIDIA’s engine, and the fastest of the three when you can use it. It is compilation-based: you build an engine for a specific model, precision, batch profile, and GPU, and you get an artifact tuned for exactly that.
+
+Which is also the cost. The learning curve is steep, model support is narrower, new architectures arrive later, it is NVIDIA-only, and it does not do image or video generation. Rebuilding on a configuration change is a real operational burden.
+
+Which to pick
+
+Learn all three and choose per deployment. Start with vLLM or SGLang, because getting to a working server quickly is worth more early than a percentage of throughput. Move to TensorRT-LLM when the workload is stable, the volume is high enough that the last twenty percent is real money, and the model is one it supports well.
+
+Previous
+Deep learning frameworks and libraries
+Next
+NVIDIA Dynamo

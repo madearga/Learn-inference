@@ -1,0 +1,34 @@
+Learn Inference
+Chapter 6 · Modalities
+Attention optimization and quantization
+Attention optimization and quantization
+Contents
+Chapter 6 · Modalities
+6 of 6
+6.6
+Video generation models
+
+Video is diffusion with a time axis, and the costs are savage. Attention now spans space and time together, so sequence lengths dwarf anything in text, and the quadratic term in attention becomes the dominant cost of the entire pipeline.
+
+6.6.1
+Attention optimization and quantization
+#
+
+Because attention dominates, the optimizations from section 2.5 matter more here than anywhere else. Sparse attention patterns that exploit the structure of video — a patch usually attends to its own neighbourhood across nearby frames — cut the cost substantially.
+
+Quantization is close to mandatory rather than optional. Dropping to lower-precision tensor cores doubles available FLOPS, and video generation needs every one of them.
+
+6.6.2
+Context parallelism
+#
+
+Video is the case where multi-GPU serves a single request rather than more users. Context parallelism splits the sequence itself across GPUs, each handling a slice of the space-time volume and exchanging what attention requires.
+
+This inverts the usual economics. Elsewhere you add GPUs to serve more people; here you add GPUs so one request completes in a tolerable time, and the interconnect bandwidth from Chapter 3 is what decides whether that scales.
+
+That covers the models. The last chapter is everything around them.
+
+Previous
+Image generation models
+Production
+Containerization

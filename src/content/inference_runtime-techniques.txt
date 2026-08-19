@@ -1,0 +1,58 @@
+Learn Inference
+Chapter 0 · Inference
+Six techniques that define the runtime
+Contents
+Chapter 0 · Inference
+3 of 6
+0.3
+Six techniques that define the runtime
+
+The runtime layer is largely an exercise in applying a handful of techniques, most of them adapted from research published in the last few years. They come up constantly, they compose with each other, and each gets a proper treatment later in the book. It is worth meeting them now, because the rest of the material is organized around them.
+
+What is easy to miss on a first pass is that none of these is free. Every one takes something away in exchange for what it gives, and choosing well means knowing which currency you are spending.
+
+Complexity
+4 of 6
+
+More moving parts to operate, and more ways to be paged at night
+
+Caching
+Speculation
+Parallelism
+Disaggregation
+Latency
+2 of 6
+
+The individual request gets slower, even as the fleet gets faster
+
+Batching
+Parallelism
+Memory
+1 of 6
+
+VRAM that something else wanted
+
+Caching
+Quality
+1 of 6
+
+The model answers slightly worse
+
+Quantization
+Compute
+1 of 6
+
+Cycles spent on work you discard
+
+Speculation
+
+Select a technique to see what it buys and what it charges. Two of them appear on more than one row — parallelism and caching bill you in two currencies each, which is most of why they are harder to adopt than their headline numbers suggest.
+
+What each technique charges you. Filed under the cost rather than the technique, because the constraint is usually what you know first. Complexity is charged by four of the six; quality by one. Select a technique to see it everywhere it bills you.
+
+These apply well beyond text. Vision language models, embedding models, speech recognition, speech synthesis, image generation, and video generation all lean on the same set, with the details bent to fit each architecture. Chapter 6 covers where the analogy holds and where it breaks.
+
+Previous
+The three layers
+Next
+Scale changes the problem

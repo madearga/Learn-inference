@@ -1,0 +1,29 @@
+Learn Inference
+Chapter 0 · Inference
+A map of what follows
+Contents
+Chapter 0 · Inference
+6 of 6
+0.6
+A map of what follows
+
+The rest of the book works up the stack. Each chapter assumes the previous ones but stands on its own well enough to be read out of order if you came here for something specific.
+
+Chapter 1, Prerequisites: Every inference optimization is an answer to a question about your product. Before touching a kernel, you need to know what you are building, which model you are serving, and what 'fast enough' means in numbers rather than adjectives.
+Chapter 2, Models: A model is a pile of matrix multiplications with opinions. This chapter builds up from a linear layer to a transformer block to a diffusion pipeline, then does the arithmetic that tells you whether your bottleneck is memory bandwidth or compute — the single most useful calculation in inference.
+Chapter 3, Hardware: Compute, memory, and the bandwidth between them. This chapter takes apart a modern datacenter GPU, disambiguates NVIDIA's architecture names and SKUs, and covers what changes when a model no longer fits on one card.
+Chapter 4, Software: The stack between a model file and a served token: CUDA, PyTorch, the model formats, and the three inference engines that most production deployments actually run on — vLLM, SGLang, and TensorRT-LLM.
+Chapter 5, Techniques: Quantization, speculative decoding, KV cache re-use, model parallelism, and disaggregation. Each one trades something — precision, memory, complexity, hardware — for latency or throughput. This chapter is about knowing which trade you are making.
+Chapter 6, Modalities: Most non-text models are transformers wearing a different hat, which means the LLM toolkit mostly transfers. Image and video generation are the exception — different architecture, different bottlenecks, different optimizations.
+Chapter 7, Production: Containers, autoscaling, cold starts, multi-cloud capacity, zero-downtime deploys, and the client code on the other end. A perfectly optimized runtime still falls over if the infrastructure around it cannot get GPUs when traffic arrives.
+
+Two appendices close it out: a glossary of the vocabulary, and a set of primary sources worth reading directly.
+
+On knowledge cutoffs
+
+Books have them too. The source material was finished in January 2026, and specific hardware, version numbers, and benchmark figures will drift. The underlying constraints move much more slowly. Memory bandwidth has been the binding limit on decode for years and shows no sign of stopping.
+
+Previous
+Where to put the abstraction
+Prerequisites
+Scale and specialization

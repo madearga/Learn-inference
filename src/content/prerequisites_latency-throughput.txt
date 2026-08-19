@@ -1,0 +1,106 @@
+Learn Inference
+Chapter 1 · Prerequisites
+Latency percentiles
+Latency percentiles
+Contents
+Chapter 1 · Prerequisites
+4 of 4
+1.4
+Measuring latency and throughput
+
+Two numbers dominate LLM serving. TTFT is how long before the first token appears, and it is governed by prefill, which is compute bound. TPS is how fast tokens arrive afterwards, governed by decode, which is memory bandwidth bound. Different phases, different bottlenecks, different fixes.
+
+Press run to stream a response.
+
+TTFT
+400ms
+Compute bound, scales with prompt length
+TPS
+30/s
+Bandwidth bound, roughly flat per user
+Total
+1.4s
+31 tokens end to end
+Time to first token
+
+400ms
+
+Tokens per second
+
+30/s · 33ms between tokens
+
+Run
+Figure 1.4. Time to first token versus tokens per second. Two numbers, two phases, two bottlenecks. A response that starts instantly and trickles can feel faster than one that pauses and then dumps — even when the second finishes first.
+
+TTFT is unambiguous. TPS is not, and the ambiguity causes real confusion in benchmark comparisons, because the same three letters describe both a latency metric and a throughput metric. When precision matters, say which you mean:
+
+Perceived TPS is tokens per second for one user. A latency metric.
+Total TPS is tokens per second across the whole service. A throughput metric, and typically far larger.
+Inter-token latency is the gap between consecutive tokens. 10 ms of ITL is 100 tokens per second per user.
+
+Both metrics assume streaming output and a human reading it. When the output is a tool call an agent will parse, individual tokens have no value on their own and the only number that means anything is total response time.
+
+1.4.1
+Latency percentiles
+#
+
+Reporting a mean latency is the most common way to be technically truthful and practically wrong. Response times are right-skewed: most cluster near a mode, and a long tail stretches out to the right. The mean gets dragged toward the tail without describing it, so it simultaneously overstates the typical experience and understates the bad one.
+
+85ms
+186ms
+287ms
+389ms
+524ms
+659ms
+795ms
+930ms
+1065ms
+1201ms
+1336ms
+1471ms
+P50
+P99
+Mean
+297ms
+Describes nobody
+P50
+254ms
+1 in 2 is slower
+P90
+558ms
+1 in 10 is slower
+P95
+727ms
+1 in 20 is slower
+P99
+1065ms
+1 in 100 is slower
+Typical response
+
+240ms median
+
+Tail weight
+
+P99 is 4.2× the median
+
+Figure 1.5. Why the mean hides your worst requests. Response times cluster and then trail off to the right. Push the tail weight up and watch the mean barely move while P99 runs away — that gap is the one in a hundred users who thinks your product is broken.
+
+Percentiles say something checkable instead. P90 means one request in ten is slower than this; P99 means one in a hundred. Those outliers do disproportionate damage, because a product where nine interactions feel instant and the tenth hangs for four seconds is not remembered as fast. It is remembered as unreliable.
+
+Pushing the mean down is worth doing. Pushing P90 and P99 down is what makes a product feel dependable, and it is usually the harder and more valuable work.
+
+1.4.2
+End-to-end metrics
+#
+
+The last distinction is where you start and stop the clock. Inference time is on-GPU time: how long generation itself took. End-to-end time is what the user experienced, including network round trips, queueing, load balancer hops, and whatever your client code does before and after.
+
+Keep both. Inference time tells you whether your model performance work is landing. End-to-end time tells you whether any of it reached the user.
+
+The gap between them is diagnostic. When inference time is excellent and end-to-end time is poor, more kernel work will not help you — the problem is in the infrastructure, and Chapter 7 is where to look.
+
+Previous
+Model selection
+Models
+Neural networks
+287ms

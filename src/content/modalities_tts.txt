@@ -1,0 +1,70 @@
+Learn Inference
+Chapter 6 · Modalities
+Streaming real-time text to speech
+Streaming real-time text to speech
+Contents
+Chapter 6 · Modalities
+4 of 6
+6.4
+TTS models
+
+Text to speech inverts ASR. Modern TTS is usually autoregressive over audio tokens, which means the whole LLM toolkit applies — including, pleasingly, speculative decoding.
+
+6.4.1
+Streaming real-time text to speech
+#
+
+The metric is time to first audio chunk. Nobody needs the whole utterance before playback starts; they need enough to begin speaking, and the rest can arrive while the first clause plays.
+
+Which means a well-built TTS stage can start producing audio from a partial LLM response. You do not wait for the sentence to finish — you start speaking the first clause while the model is still writing the second. That overlap is the difference between a voice agent that feels responsive and one that does not.
+
+6.4.2
+Speech-to-speech models
+#
+
+Speech-to-speech models collapse the three-stage pipeline into one, taking audio in and producing audio out without a text intermediate. Removing two stages removes two sets of latency and two failure modes, and preserves tone and emotion that transcription discards.
+
+The costs are real: you lose the text transcript that most products need for logging and moderation, and you lose the ability to swap the reasoning model independently. Worth it for some products, not for most.
+
+180
+90
+220
+130
+60
+500ms natural
+800ms noticeable
+End to end
+680ms
+The pause is audible
+
+Users will feel this without being able to name it. Look at the largest bar first — it is very often VAD endpointing rather than any of the models.
+
+VAD endpoint
+
+Waiting to be sure the user actually stopped talking. Pure latency, and the easiest place to spend too much.
+
+ASR
+
+Transcribing the final chunk. Whisper on a fractional GPU is fast; the model is only 1.5B parameters.
+
+LLM first token
+
+Time to first token, not the whole response — you can start speaking before the sentence is finished.
+
+TTS first audio
+
+Time to first audio chunk. Streaming TTS starts speaking on the first clause rather than the full response.
+
+Network
+
+Round trips to and from the user. Geography, not engineering — the fix is running closer to them.
+
+The voice agent latency budget. Three models in series plus network, and the whole chain has to fit inside a conversational turn. No single stage is slow. The sum is the problem, which is why voice is the hardest latency target in production inference.
+Why voice is the hardest target
+
+Every other modality gets one model’s worth of latency budget. Voice gets three models plus network, in series, inside a conversational turn. It is also the modality where users notice immediately, because everyone has a lifetime of calibration for how long a person takes to answer.
+
+Previous
+ASR models
+Next
+Image generation models

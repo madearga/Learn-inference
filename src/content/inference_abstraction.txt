@@ -1,0 +1,40 @@
+Learn Inference
+Chapter 0 · Inference
+Where to put the abstraction
+Contents
+Chapter 0 · Inference
+5 of 6
+0.5
+Where to put the abstraction
+
+Once the runtime and infrastructure work exists, somebody has to decide how it is exposed. This applies whether you are buying inference from a provider or building a platform for your own engineers; the question is the same either way.
+
+At one extreme, inference is a black box: hand over weights, receive an API. At the other, you get compute, network, and disk, and everything above that is yours. Both extremes are defensible and most teams belong somewhere between them.
+
+Model API
+Managed deployment
+Serving framework
+Custom runtime
+You get
+
+Weights in, autoscaled endpoint out. Engine choice and a handful of serving knobs are yours; the cluster underneath is not.
+
+You give up
+
+Kernel-level control and the ability to do anything genuinely unusual with scheduling or routing.
+
+SuitsTeams serving open or fine-tuned models who would rather ship features than run Kubernetes.
+
+Control you keep
+
+Hand it to someone else
+Own every layer
+
+How much of the stack do you want to own?. Control and productivity trade against each other along this axis. Most teams sit further left than they expect to, and that is usually the right call.
+
+I would push most teams further toward abstraction than instinct suggests. Owning the whole stack is satisfying and it is occasionally correct, but it is a standing commitment of engineering time that competes directly with the product. The right amount of control is the amount you will actually use.
+
+Previous
+Scale changes the problem
+Next
+A map of what follows

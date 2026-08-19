@@ -1,0 +1,46 @@
+Learn Inference
+Chapter 0 · Inference
+The three layers
+Contents
+Chapter 0 · Inference
+2 of 6
+0.2
+The three layers
+
+Doing this well means solving three separate problems, and they do not substitute for one another. A team can be excellent at one and still have a service nobody wants to depend on.
+
+L3
+Tooling
+The surface engineers work through
+L2
+Infrastructure
+Across instances, regions, and clouds
+L1
+Runtime
+One model, one instance
+Owns
+How many requests share a forward pass
+Which kernels run and in what precision
+What gets cached between requests
+Built from
+CUDA
+PyTorch
+vLLM
+SGLang
+TensorRT-LLM
+Skip it and
+
+You pay for five GPUs to serve what one could have handled. Nothing is broken, exactly. The bill is just several times larger than it needed to be, forever.
+
+Figure 0.1. The three layers of an inference stack. Open a layer to see what it owns and what happens to a team that skips it. The layers are ordered by distance from the hardware: the runtime touches the GPU, the tooling touches the engineer.
+
+The runtime is the narrowest of the three and the easiest to reason about: one model, one instance, and the question of how much useful work you extract from the GPU you are already paying for. It rests on a deep software stack that runs from CUDA up through PyTorch to inference engines like vLLM, SGLang, and TensorRT-LLM. Low-level work matters here in a way that surprises people coming from web services; a better attention kernel is worth more than most application-level cleverness.
+
+The infrastructure layer exists because no single instance is enough. Whatever you do to one server, it will eventually receive more traffic than it can serve, and that is not a CUDA problem or a PyTorch problem. It is a systems problem, and it needs a systems answer.
+
+The tooling layer is the one teams skip, because it feels like overhead next to the other two. It is the interface everything else is operated through, and its absence shows up as a team that cannot deploy without a specific person being awake.
+
+Previous
+Two phases, two disciplines
+Next
+Six techniques that define the runtime

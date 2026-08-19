@@ -1,0 +1,19 @@
+Learn Inference
+Chapter 4 · Software
+NVIDIA Dynamo
+Contents
+Chapter 4 · Software
+4 of 5
+4.4
+NVIDIA Dynamo
+
+Dynamo sits above the engines. Where an engine makes one model fast on one node, Dynamo coordinates many engine instances across many nodes — which is the infrastructure layer problem from Chapter 0, productized.
+
+Its most interesting capability is dynamic disaggregation: running prefill and decode on separate worker pools and shifting the ratio between them as traffic changes. Doing that by hand means picking a split and living with it; doing it dynamically means the fleet follows the workload.
+
+It also handles KV-cache-aware routing, so requests land on the worker that already holds their prefix. That is a meaningful win at scale and pure overhead below it.
+
+Previous
+Inference engines
+Next
+Performance benchmarking and load testing

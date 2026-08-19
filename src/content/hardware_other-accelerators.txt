@@ -1,0 +1,17 @@
+Learn Inference
+Chapter 3 · Hardware
+Other datacenter accelerator options
+Contents
+Chapter 3 · Hardware
+4 of 5
+3.4
+Other datacenter accelerator options
+
+NVIDIA’s dominance in inference is real but not total. AMD ships the MI300 series with competitive memory capacity and bandwidth, and ROCm has improved to the point where major engines support it. Google’s TPUs serve enormous internal and Cloud workloads. AWS builds Inferentia and Trainium. Groq and Cerebras take genuinely different architectural approaches aimed at latency.
+
+The gap is rarely the silicon. It is CUDA and the decade of kernels, libraries, and engine support built on top of it. Moving off NVIDIA means accepting that some optimization you want will not be available yet, and pricing that against whatever capacity or cost advantage prompted the move.
+
+Previous
+Instances
+Next
+Local inference
